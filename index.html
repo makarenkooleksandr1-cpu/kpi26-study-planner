@@ -1,19 +1,86 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KPI 2026 GitHub Pages Template</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
+<html lang="uk">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KPI Study Planner 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <div class="app-wrapper">
+    <header class="glass-header">
+      <div class="header-content">
+        <h1>Study Planner</h1>
+        <div class="header-actions">
+          <button id="load-demo-btn" class="btn btn-secondary">Завантажити тестові дані</button>
+          <button id="clear-data-btn" class="btn btn-danger">Очистити всі дані</button>
+        </div>
+      </div>
+    </header>
+
     <main class="container">
-      <h1>KPI 2026 GitHub Pages Template</h1>
-      <p>This repository is a starter template for small coursework web applications.</p>
-      <p>Add markdown requirements under <code>requirements/</code>, then run the skill to turn this into a real app.</p>
-      <button id="reset-demo" type="button">Reset demo message</button>
-      <p id="status" class="status"></p>
+      <section class="glass-card form-section">
+        <h2>Додати новий предмет</h2>
+        <form id="subject-form">
+          <div class="form-group">
+            <label for="subject-name">Назва предмету</label>
+            <input type="text" id="subject-name" placeholder="Наприклад, Вища Математика" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="exam-date">Дата іспиту</label>
+              <input type="date" id="exam-date" required />
+              <span class="error-msg" id="exam-date-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="difficulty">Складність (1-5)</label>
+              <input type="number" id="difficulty" min="1" max="5" value="3" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="topics-list">Список тем (через кому)</label>
+            <textarea id="topics-list" rows="3" placeholder="Тема 1, Тема 2, Тема 3..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Зберегти предмет</button>
+        </form>
+      </section>
+
+      <section class="subjects-section">
+        <div class="section-header">
+          <h2>Мої іспити</h2>
+        </div>
+        <div id="subjects-container" class="subjects-grid">
+          <!-- Subjects will be rendered here dynamically -->
+        </div>
+      </section>
     </main>
-    <script type="module" src="./src/app.js"></script>
-  </body>
+
+    <!-- Cheat Sheet Modal -->
+    <div id="cheat-sheet-modal" class="modal hidden">
+      <div class="modal-content glass-card">
+        <div class="modal-header">
+          <h3>Ваша шпаргалка</h3>
+          <button id="close-modal-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <textarea id="cheat-sheet-text" readonly rows="10"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button id="copy-cheat-sheet-btn" class="btn btn-primary">Копіювати</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./src/app.js"></script>
+</body>
+
 </html>

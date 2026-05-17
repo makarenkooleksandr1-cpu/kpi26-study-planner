@@ -1,35 +1,25 @@
-# KPI 2026 GitHub Pages App Template
+# KPI Study Planner 2026
 
-Starter repository for small coursework web applications that are implemented from existing markdown requirements and deployed to GitHub Pages.
+Клієнтський вебзастосунок для допомоги студентам у підготовці до іспитів.
+Розроблено як чистий статичний застосунок без бекенду (Plain HTML, CSS, Vanilla JS) і розміщено на GitHub Pages.
 
-## Intended use
+## Особливості
+- Додавання предметів із зазначенням дати іспиту та списку тем.
+- Розрахунок "інтенсивності" (швидкості вивчення) залежно від кількості днів, що залишились.
+- Індикація статусу (Комфортний, Нормальний, Високе навантаження).
+- Можливість відмічати теми як "Вивчені".
+- Генератор шпор: кнопка, що збирає всі вивчені теми у зручний список для копіювання.
+- Всі дані зберігаються локально у вашому браузері (`localStorage`).
 
-Use this repository as a template for:
-- the teacher's demo application;
-- student repositories created after requirements are already written;
-- small GitHub Pages projects that must stay within static hosting constraints.
+## Як запустити локально
+Застосунок є повністю статичним, тому жодного `npm install` або `build` не потрібно.
+1. Склонуйте репозиторій.
+2. Відкрийте файл `index.html` у браузері або скористайтесь розширенням Live Server (VS Code) для зручності.
 
-## Suggested workflow
+## Деплой на GitHub Pages
+1. У налаштуваннях репозиторію на GitHub перейдіть до **Settings > Pages**.
+2. В розділі "Build and deployment" встановіть "Source" на **GitHub Actions**.
+3. При наступному пуші в гілку `main` автоматично запуститься workflow (файл `.github/workflows/pages.yml`), і сайт буде опубліковано.
 
-1. Create a new repository from this template.
-2. Add the project requirements as markdown under `requirements/`.
-3. Invoke the `requirements-to-github-pages` skill inside the new repository.
-4. Let the skill:
-   - assess feasibility;
-   - choose the simplest viable stack;
-   - document SDRs;
-   - implement the app;
-   - add demo data and reset flow;
-   - update deployment files.
-
-## Initial repository structure
-
-- `requirements/` - place the markdown requirements here
-- `docs/sdr/` - software decision records
-- `data/` - seed and demo data if needed
-- `.github/workflows/` - GitHub Pages deployment workflow
-
-## Notes
-
-This repository is intentionally minimal. It is not a finished application.
-It is a clean starting point for projects that will be generated from existing requirements.
+## Технічні деталі (SDR)
+Архітектурні рішення (Stack choice, Storage, Routing/Data model) описані у директорії `docs/sdr/`.
