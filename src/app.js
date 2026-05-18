@@ -152,6 +152,27 @@ function renderSubjects() {
       </div>
     `;
 
+    const examDateObj = new Date(subject.examDate);
+    const todayObj = new Date();
+    examDateObj.setHours(0, 0, 0, 0);
+    todayObj.setHours(0, 0, 0, 0);
+    const diffDays = Math.ceil((examDateObj.getTime() - todayObj.getTime()) / (1000 * 60 * 60 * 24));
+
+    let motivationMsg = '';
+    if (progressPercent === 100) {
+      motivationMsg = '🎉 Чудова робота! Ти повністю готовий!';
+    } else if (diffDays < 0) {
+      motivationMsg = '⏰ Іспит вже пройшов!';
+    } else if (diffDays === 0) {
+      motivationMsg = progressPercent < 50 ? '🚨 Іспит сьогодні! Швидше за матеріали!' : '🔥 Іспит сьогодні! Повтори найважливіше!';
+    } else if (diffDays <= 3) {
+      motivationMsg = progressPercent < 50 ? '⚠️ До іспиту лічені дні! Максимальна концентрація!' : '🚀 Майже на фініші! Ти все встигнеш!';
+    } else if (diffDays <= 7) {
+      motivationMsg = progressPercent < 70 ? '⏳ Залишився тиждень! Час прискоритись!' : '👍 Тиждень до іспиту. Темп хороший!';
+    } else {
+      motivationMsg = progressPercent === 0 ? '🌱 Почни підготовку вже сьогодні, щоб потім не поспішати!' : '🐢 Рухайся в своєму темпі, часу ще достатньо!';
+    }
+
     card.innerHTML = `
       <div class="subject-header">
         <div>
@@ -164,6 +185,7 @@ function renderSubjects() {
         </div>
         <button class="delete-subject-btn" data-id="${subject.id}" aria-label="Видалити предмет">&times;</button>
       </div>
+      <div class="motivation-msg">${motivationMsg}</div>
       <div class="progress-bar-container" title="Прогрес готовності: ${progressPercent}%">
         <div class="progress-fill" style="width: ${progressPercent}%"></div>
       </div>

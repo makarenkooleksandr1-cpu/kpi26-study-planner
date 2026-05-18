@@ -274,6 +274,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .intensity-yellow { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
 .intensity-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
 
+.motivation-msg {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #c084fc;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .progress-bar-container {
   height: 8px;
   background: var(--glass-border);
