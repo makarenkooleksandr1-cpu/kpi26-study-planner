@@ -35,7 +35,25 @@ export function sortSubjects(subjects) {
 
 export function generateCheatSheet(subject) {
   const studiedTopics = subject.topics.filter(t => t.isStudied);
-  if (studiedTopics.length === 0) return 'Немає вивчених тем для шпори.';
+  const readLiterature = subject.literature ? subject.literature.filter(l => l.isRead) : [];
   
-  return studiedTopics.map((t, index) => `${index + 1}. ${t.name}`).join('\n');
+  if (studiedTopics.length === 0 && readLiterature.length === 0) {
+    return 'Немає вивчених тем або прочитаної літератури для генерації шпори. Почни підготовку! 📚';
+  }
+  
+  let parts = [];
+  
+  if (studiedTopics.length > 0) {
+    parts.push('📝 ОПОРНІ ТЕМИ ДЛЯ ІСПИТУ:\n' + studiedTopics.map((t, index) => `${index + 1}. ${t.name}`).join('\n'));
+  } else {
+    parts.push('📝 ОПОРНІ ТЕМИ ДЛЯ ІСПИТУ:\nНемає вивчених тем ⚠️');
+  }
+  
+  if (readLiterature.length > 0) {
+    parts.push('📚 ОПРАЦЬОВАНА ЛІТЕРАТУРА (Джерела для доцільного мислення):\n' + readLiterature.map((l, index) => `${index + 1}. 📖 ${l.name}`).join('\n') + '\n\n💡 Пам\'ятай про ці джерела! Згадка авторів та концепцій допоможе структурувати відповіді та мислити ширше під час іспиту!');
+  } else if (subject.literature && subject.literature.length > 0) {
+    parts.push('📚 ОПРАЦЬОВАНА ЛІТЕРАТУРА:\nНе опрацьовано жодного джерела літератури. Заглянь у книги перед іспитом! 📖');
+  }
+  
+  return parts.join('\n\n');
 }
