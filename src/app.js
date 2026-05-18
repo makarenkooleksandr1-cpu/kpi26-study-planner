@@ -159,18 +159,30 @@ function renderSubjects() {
     const diffDays = Math.ceil((examDateObj.getTime() - todayObj.getTime()) / (1000 * 60 * 60 * 24));
 
     let motivationMsg = '';
-    if (progressPercent === 100) {
-      motivationMsg = '🎉 Чудова робота! Ти повністю готовий!';
-    } else if (diffDays < 0) {
-      motivationMsg = '⏰ Іспит вже пройшов!';
-    } else if (diffDays === 0) {
-      motivationMsg = progressPercent < 50 ? '🚨 Іспит сьогодні! Швидше за матеріали!' : '🔥 Іспит сьогодні! Повтори найважливіше!';
-    } else if (diffDays <= 3) {
-      motivationMsg = progressPercent < 50 ? '⚠️ До іспиту лічені дні! Максимальна концентрація!' : '🚀 Майже на фініші! Ти все встигнеш!';
-    } else if (diffDays <= 7) {
-      motivationMsg = progressPercent < 70 ? '⏳ Залишився тиждень! Час прискоритись!' : '👍 Тиждень до іспиту. Темп хороший!';
+    
+    if (progressPercent === 0) {
+      motivationMsg = '😠 Не будь лінтяєм! Пора стати як губка для вбирання знань! 🧽';
+    } else if (progressPercent < 20) {
+      motivationMsg = '👀 Перший крок зроблено, але попереду ще гора роботи! Не розслабляйся! ⛰️';
+    } else if (progressPercent < 40) {
+      motivationMsg = '🏃‍♂️ Темп задано! Давай-давай, ти тільки розігріваєшся!';
+    } else if (progressPercent < 60) {
+      motivationMsg = '🧠 Вже екватор! Ти молодець, знання починають вкладатися в голові!';
+    } else if (progressPercent < 80) {
+      motivationMsg = '🔥 Майже фінішна пряма! Ти вже знаєш набагато більше, ніж учора!';
+    } else if (progressPercent < 100) {
+      motivationMsg = '🚀 Залишилися лічені деталі! Зберись, ти вже майже експерт!';
     } else {
-      motivationMsg = progressPercent === 0 ? '🌱 Почни підготовку вже сьогодні, щоб потім не поспішати!' : '🐢 Рухайся в своєму темпі, часу ще достатньо!';
+      motivationMsg = '🎉 Блискуче! Ти повністю готовий розірвати цей іспит! 🏆';
+    }
+
+    // Add time pressure modifiers
+    if (diffDays < 0 && progressPercent < 100) {
+      motivationMsg = '⏰ Іспит вже позаду... Сподіваємось, знання все одно знадобляться!';
+    } else if (diffDays === 0 && progressPercent < 100) {
+      motivationMsg = '🚨 ІСПИТ СЬОГОДНІ! ' + motivationMsg;
+    } else if (diffDays <= 3 && progressPercent < 70) {
+      motivationMsg = '⚠️ ЧАСУ ОБМАЛЬ! ' + motivationMsg;
     }
 
     card.innerHTML = `
