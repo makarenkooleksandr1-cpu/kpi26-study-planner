@@ -141,10 +141,37 @@ const closeModalBtn = document.getElementById('close-modal-btn');
 const cheatSheetText = document.getElementById('cheat-sheet-text');
 const copyCheatSheetBtn = document.getElementById('copy-cheat-sheet-btn');
 
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    if (themeToggleBtn) themeToggleBtn.textContent = '☀️ Світла тема';
+  } else {
+    document.body.classList.remove('light-theme');
+    if (themeToggleBtn) themeToggleBtn.textContent = '🌙 Темна тема';
+  }
+}
+
+function toggleTheme() {
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  const isLight = document.body.classList.toggle('light-theme');
+  
+  if (isLight) {
+    localStorage.setItem('theme', 'light');
+    if (themeToggleBtn) themeToggleBtn.textContent = '☀️ Світла тема';
+  } else {
+    localStorage.setItem('theme', 'dark');
+    if (themeToggleBtn) themeToggleBtn.textContent = '🌙 Темна тема';
+  }
+}
+
 // Initialize Application
 function init() {
   subjects = loadData();
   renderSubjects();
+  initTheme();
 
   // Event Listeners
   form.addEventListener('submit', handleFormSubmit);
@@ -152,6 +179,11 @@ function init() {
   
   loadDemoBtn.addEventListener('click', handleLoadDemo);
   clearDataBtn.addEventListener('click', handleClearData);
+  
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', toggleTheme);
+  }
   
   closeModalBtn.addEventListener('click', closeModal);
   copyCheatSheetBtn.addEventListener('click', copyCheatSheet);
