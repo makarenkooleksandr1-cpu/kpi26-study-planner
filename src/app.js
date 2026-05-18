@@ -124,6 +124,7 @@ function renderSubjects() {
             <span>📚 Тем: ${subject.topics.length} (Залишилось: ${unstudiedCount})</span>
           </div>
         </div>
+        <button class="delete-subject-btn" data-id="${subject.id}" aria-label="Видалити предмет">&times;</button>
       </div>
       <div class="intensity-badge intensity-${intensity.color}">
         ${intensity.status} ${intensity.coefficient > 0 ? `(К=${intensity.coefficient.toFixed(1)})` : ''}
@@ -151,6 +152,11 @@ function renderSubjects() {
   document.querySelectorAll('.generate-cheat-sheet-btn').forEach(btn => {
     btn.addEventListener('click', () => openCheatSheet(btn.dataset.id));
   });
+
+  // Attach event listeners for delete buttons
+  document.querySelectorAll('.delete-subject-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteSubject(btn.dataset.id));
+  });
 }
 
 function toggleTopicStatus(subjectId, topicId) {
@@ -163,6 +169,14 @@ function toggleTopicStatus(subjectId, topicId) {
   topic.isStudied = !topic.isStudied;
   saveData(subjects);
   renderSubjects(); // Re-render to update UI and intensity
+}
+
+function deleteSubject(subjectId) {
+  if (confirm('Ви впевнені, що хочете видалити цей предмет?')) {
+    subjects = subjects.filter(s => s.id !== subjectId);
+    saveData(subjects);
+    renderSubjects();
+  }
 }
 
 function handleLoadDemo() {
