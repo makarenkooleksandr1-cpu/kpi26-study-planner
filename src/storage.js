@@ -45,6 +45,10 @@ export function loadDemoData() {
         { id: crypto.randomUUID(), name: 'Похідні', isStudied: true },
         { id: crypto.randomUUID(), name: 'Матриці', isStudied: false },
         { id: crypto.randomUUID(), name: 'Ряди', isStudied: false }
+      ],
+      literature: [
+        { id: crypto.randomUUID(), name: 'Дубовик "Вища математика"', isRead: true },
+        { id: crypto.randomUUID(), name: 'Конспект лекцій', isRead: false }
       ]
     },
     {
@@ -56,6 +60,11 @@ export function loadDemoData() {
         { id: crypto.randomUUID(), name: 'HTML/CSS', isStudied: true },
         { id: crypto.randomUUID(), name: 'JavaScript', isStudied: false },
         { id: crypto.randomUUID(), name: 'React', isStudied: false }
+      ],
+      literature: [
+        { id: crypto.randomUUID(), name: 'MDN Web Docs', isRead: true },
+        { id: crypto.randomUUID(), name: 'React Documentation', isRead: false },
+        { id: crypto.randomUUID(), name: 'Курс на Coursera', isRead: false }
       ]
     }
   ];

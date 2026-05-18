@@ -45,6 +45,7 @@ function handleFormSubmit(e) {
   const dateStr = examDateInput.value;
   const difficultyStr = document.getElementById('difficulty').value;
   const topicsStr = document.getElementById('topics-list').value;
+  const literatureStr = document.getElementById('literature-list') ? document.getElementById('literature-list').value : '';
 
   // Validation: Date in past
   const selectedDate = new Date(dateStr);
@@ -72,12 +73,23 @@ function handleFormSubmit(e) {
     return;
   }
 
+  // Parse literature
+  const literature = literatureStr.split(',')
+    .map(l => l.trim())
+    .filter(l => l.length > 0)
+    .map(l => ({
+      id: crypto.randomUUID(),
+      name: l,
+      isRead: false
+    }));
+
   const newSubject = {
     id: crypto.randomUUID(),
     name: nameInput,
     examDate: dateStr,
     difficulty: parseInt(difficultyStr, 10),
-    topics: topics
+    topics: topics,
+    literature: literature
   };
 
   subjects.push(newSubject);
@@ -101,7 +113,17 @@ function renderSubjects() {
   const sorted = sortSubjects([...subjects]);
 
   sorted.forEach(subject => {
-    const unstudiedCount = subject.topics.filter(t => !t.isStudied).length;
+    const totalTopics = subject.topics.length;
+    const studiedTopics = subject.topics.filter(t => t.isStudied).length;
+    const unstudiedCount = totalTopics - studiedTopics;
+
+    const totalLiterature = subject.literature ? subject.literature.length : 0;
+    const readLiterature = subject.literature ? subject.literature.filter(l => l.isRead).length : 0;
+    
+    const totalItems = totalTopics + totalLiterature;
+    const completedItems = studiedTopics + readLiterature;
+    const progressPercent = totalItems === 0 ? 0 : Math.round((completedItems / totalItems) * 100);
+
     const intensity = calculateIntensity(subject.examDate, unstudiedCount);
     
     const card = document.createElement('div');
@@ -113,6 +135,20 @@ function renderSubjects() {
         <span class="topic-name">${topic.name}</span>
       </li>
     `).join('');
+
+    const literatureHtml = subject.literature && subject.literature.length > 0 ? `
+      <div class="literature-section">
+        <h4 class="section-subtitle">Література:</h4>
+        <ul class="literature-list">
+          ${subject.literature.map(item => `
+            <li class="literature-item ${item.isRead ? 'read' : ''}" data-subject-id="${subject.id}" data-lit-id="${item.id}">
+              <div class="literature-checkbox"></div>
+              <span class="literature-name">${item.name}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    ` : '';
 
     card.innerHTML = `
       <div class="subject-header">
@@ -126,12 +162,16 @@ function renderSubjects() {
         </div>
         <button class="delete-subject-btn" data-id="${subject.id}" aria-label="Видалити предмет">&times;</button>
       </div>
+      <div class="progress-bar-container" title="Прогрес готовності: ${progressPercent}%">
+        <div class="progress-fill" style="width: ${progressPercent}%"></div>
+      </div>
       <div class="intensity-badge intensity-${intensity.color}">
         ${intensity.status} ${intensity.coefficient > 0 ? `(К=${intensity.coefficient.toFixed(1)})` : ''}
       </div>
       <ul class="topics-list">
         ${topicsHtml}
       </ul>
+      ${literatureHtml}
       <button class="btn btn-secondary btn-sm generate-cheat-sheet-btn" data-id="${subject.id}">
         Згенерувати шпору
       </button>
@@ -153,10 +193,32 @@ function renderSubjects() {
     btn.addEventListener('click', () => openCheatSheet(btn.dataset.id));
   });
 
+  // Attach event listeners for literature
+  document.querySelectorAll('.literature-item').forEach(item => {
+    item.addEventListener('click', () => toggleLiteratureStatus(
+      item.dataset.subjectId, 
+      item.dataset.litId
+    ));
+  });
+
   // Attach event listeners for delete buttons
   document.querySelectorAll('.delete-subject-btn').forEach(btn => {
     btn.addEventListener('click', () => deleteSubject(btn.dataset.id));
   });
+}
+
+function toggleLiteratureStatus(subjectId, litId) {
+  const subject = subjects.find(s => s.id === subjectId);
+  if (!subject) return;
+  
+  if (!subject.literature) return;
+  
+  const lit = subject.literature.find(l => l.id === litId);
+  if (!lit) return;
+
+  lit.isRead = !lit.isRead;
+  saveData(subjects);
+  renderSubjects();
 }
 
 function toggleTopicStatus(subjectId, topicId) {
