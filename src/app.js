@@ -342,6 +342,54 @@ function renderSubjects() {
   });
 }
 
+function isSubjectFullyCompleted(subject) {
+  const totalTopics = subject.topics.length;
+  const studiedTopics = subject.topics.filter(t => t.isStudied).length;
+  const totalLiterature = subject.literature ? subject.literature.length : 0;
+  const readLiterature = subject.literature ? subject.literature.filter(l => l.isRead).length : 0;
+  
+  const totalItems = totalTopics + totalLiterature;
+  const completedItems = studiedTopics + readLiterature;
+  
+  return totalItems > 0 && completedItems === totalItems;
+}
+
+function triggerCelebration() {
+  if (typeof confetti === 'function') {
+    // Multi-burst canvas confetti
+    const duration = 2.5 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+      // Left side burst
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.8 }
+      });
+      // Right side burst
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.8 }
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+    
+    // Central huge burst
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+}
+
 function toggleLiteratureStatus(subjectId, litId) {
   const subject = subjects.find(s => s.id === subjectId);
   if (!subject) return;
@@ -351,7 +399,15 @@ function toggleLiteratureStatus(subjectId, litId) {
   const lit = subject.literature.find(l => l.id === litId);
   if (!lit) return;
 
+  const wasCompleted = isSubjectFullyCompleted(subject);
+
   lit.isRead = !lit.isRead;
+  
+  const isCompleted = isSubjectFullyCompleted(subject);
+  if (isCompleted && !wasCompleted) {
+    triggerCelebration();
+  }
+
   saveData(subjects);
   renderSubjects();
 }
@@ -363,7 +419,15 @@ function toggleTopicStatus(subjectId, topicId) {
   const topic = subject.topics.find(t => t.id === topicId);
   if (!topic) return;
 
+  const wasCompleted = isSubjectFullyCompleted(subject);
+
   topic.isStudied = !topic.isStudied;
+
+  const isCompleted = isSubjectFullyCompleted(subject);
+  if (isCompleted && !wasCompleted) {
+    triggerCelebration();
+  }
+
   saveData(subjects);
   renderSubjects(); // Re-render to update UI and intensity
 }
