@@ -136,19 +136,21 @@ function renderSubjects() {
       </li>
     `).join('');
 
-    const literatureHtml = subject.literature && subject.literature.length > 0 ? `
+    const literatureHtml = `
       <div class="literature-section">
         <h4 class="section-subtitle">Література:</h4>
-        <ul class="literature-list">
-          ${subject.literature.map(item => `
-            <li class="literature-item ${item.isRead ? 'read' : ''}" data-subject-id="${subject.id}" data-lit-id="${item.id}">
-              <div class="literature-checkbox"></div>
-              <span class="literature-name">${item.name}</span>
-            </li>
-          `).join('')}
-        </ul>
+        ${subject.literature && subject.literature.length > 0 ? `
+          <ul class="literature-list">
+            ${subject.literature.map(item => `
+              <li class="literature-item ${item.isRead ? 'read' : ''}" data-subject-id="${subject.id}" data-lit-id="${item.id}">
+                <div class="literature-checkbox"></div>
+                <span class="literature-name">${item.name}</span>
+              </li>
+            `).join('')}
+          </ul>
+        ` : '<p style="font-size: 0.8rem; color: var(--text-secondary); opacity: 0.7;">Не додано</p>'}
       </div>
-    ` : '';
+    `;
 
     card.innerHTML = `
       <div class="subject-header">
