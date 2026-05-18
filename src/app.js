@@ -1,12 +1,12 @@
 import { loadData, saveData, clearData, loadDemoData } from './storage.js';
 import { calculateIntensity, sortSubjects, generateCheatSheet } from './logic.js';
-function getMotivationMessage(progressPercent, diffDays, subjectId = '') {
-  // Deterministic helper to select a message variation based on subjectId
+function getMotivationMessage(progressPercent, diffDays, seed = '') {
+  // Deterministic helper to select a message variation based on seed
   function getVariation(options) {
-    if (!subjectId) return options[0];
+    if (!seed) return options[0];
     let hash = 0;
-    for (let i = 0; i < subjectId.length; i++) {
-      hash = subjectId.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < seed.length; i++) {
+      hash = seed.charCodeAt(i) + ((hash << 5) - hash);
     }
     const idx = Math.abs(hash) % options.length;
     return options[idx];
@@ -282,7 +282,7 @@ function renderSubjects() {
     todayObj.setHours(0, 0, 0, 0);
     const diffDays = Math.ceil((examDateObj.getTime() - todayObj.getTime()) / (1000 * 60 * 60 * 24));
 
-    let motivationMsg = getMotivationMessage(progressPercent, diffDays, subject.id);
+    let motivationMsg = getMotivationMessage(progressPercent, diffDays, subject.id || subject.name);
 
     card.innerHTML = `
       <div class="subject-header">
